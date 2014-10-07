@@ -70,6 +70,11 @@ module Spree
       end
     end
 
+    def credit(credit_cents, response_code, options)
+      # Check why it fails here
+      refund(options[:payment], (credit_cents>0)? credit_cents : options[:payment].amount) unless !options.has_key?(:payment)
+    end
+
     def refund(payment, amount)
       refund_type = payment.amount == amount.to_f ? "Full" : "Partial"
       refund_transaction = provider.build_refund_transaction({
